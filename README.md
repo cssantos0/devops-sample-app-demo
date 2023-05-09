@@ -187,6 +187,7 @@ kubectx production=$(kubectx -c)
 
 gcloud container clusters get-credentials <GKE_STAGING_CLUSTER_NAME> --zone $GCP_ZONE --project $GCP_PROJECT_ID
 kubectx staging=$(kubectx -c)
+```
 
 where:
 
