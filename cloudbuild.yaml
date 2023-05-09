@@ -1,6 +1,7 @@
 steps:
 - name: maven:3-eclipse-temurin-17-alpine
-  args: ['test']
+  entrypoint: mvn
+  args: ["test"]
   dir: 'cirene-svc'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '--build-arg', 'ENABLE_RATING=true', '--build-arg', 'ENABLE_INFO=true', '.']
