@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cirene-svc
+  labels:
+    app: cirene-svc
+    service: cirene-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: cirene-svc
+  ports:
+  - port: 4000
+    protocol: TCP
+    targetPort: 4000 
