@@ -9,3 +9,9 @@ steps:
   dir: 'cirene-svc'
 images:
 - '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
+artifacts:
+  objects:
+    location: 'gs://devops-demo-prj-tfstate/$PROJECT_ID/surefire-reports'
+    paths:
+      - 'cirene-svc/target/surefire-reports/*'
+ 
