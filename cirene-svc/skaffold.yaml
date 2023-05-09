@@ -14,11 +14,11 @@ build:
       buildArgs:
         ENABLE_INFO: 'true'
         ENABLE_RATING: 'true'
-#test:
-  #- image: cirene-svc-v4
-  #  custom:
-  #    - command: mvn clean test
-  #      timeoutSeconds: 60
+test:
+  - image: cirene-svc-v4
+    custom:
+      - command: mvn clean test
+        timeoutSeconds: 60
   #- image: cirene-svc-v4
   #  custom:
   #    - command: ./execute-code-analysis.sh
