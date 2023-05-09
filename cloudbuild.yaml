@@ -1,5 +1,5 @@
 steps:
-- name: 'gcr.io/cloud-builders/mvn'
+- name: maven:3-eclipse-temurin-17-alpine
   args: ['test']
   dir: 'cirene-svc'
 - name: 'gcr.io/cloud-builders/docker'
