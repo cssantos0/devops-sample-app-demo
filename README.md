@@ -107,10 +107,11 @@ docker system prune -a
 
 ### Using Skaffold
 
-The base of Skaffold configuration is within the `skaffold.yaml` file. There are 2 profiles:
+The base of Skaffold configuration is within the `skaffold.yaml` file. There are 2 profiles but 3 possible runtimes:
 
-* `minikube-profile`: To run locally using Minikube
-* `staging-profile`: To run in a Kubernetes cluster (not limited to GKE)
+* `default`: To run locally using Minikube
+* `staging-profile`: To run in a Kubernetes cluster (not limited to GKE). In this sample, to deploy on  staging for performance tests
+* `production-profile`: To run in a Kubernetes cluster (not limited to GKE). In this sample, to have a sample deploy in a remote cluster
 
 #### on Minikube
 
@@ -148,72 +149,49 @@ minikube   Ready    control-plane   26d   v1.25.3
 Finally, use `Skaffold`to build and deploy the application, starting the `inner development loop` on minikube:
 
 ```
-skaffold dev --port-forward
+skaffold dev
 ```
 
 > This will start skaffold in development mode, therefore its possible to use its features such as hot deploy, remote debugging and others.
 
-> The `--port-forward` flag forwards the proper port so the services can receive requests. This is needed because there is no actual 
-load balancer created (since its been running on Minikube).
+> The Skaffold configuration is already setting the `port-forward` flag. Therefore it forwards the request to the proper port so the Kubernetes service
+ can receive requests. This is needed because there is no actual load balancer created (since its been running on Minikube).
 
 To make sure everything was properly deployed on minikube, run:
 
 ```
-kubectl get all -n mc-app
+kubectl get all -n demo-app
 ```
 
-> where `-n mc-app` is the namespace where the application is deployed.
+> where `-n demo-app` is the namespace where the application is deployed.
 
-As output of the command above, it shoud be returned 1 pod running, 1 service of type Load Balancer, 1 deployment and 1 replica set.
+As output of the command above, it shoud be returned 1 pod running, 1 service of type ClusterIp, 1 deployment and 1 replica set.
 
 Now, the application should be reachable, check the [APIs Testing](#apis-testing) section below to make calls.
 
-As an alternative, if the `--port-forward`is not provided, meaning the developer ran the application using `skaffold dev`, the port needs to be forwarded
-so it can be reachable. For this, run the following command to port forward the service in the port 4000:
-
-```
-kubectl port-forward service/cirene-svc 4000:4000 -n mc-app
-```
-
 #### on GKE
 
-If this is the first service being deployed, first follow the instructions to setup the [Google Cloud project](../../infra/gcp/README.md) and then to 
-provision resources using [Terraform](../../infra/terraform/README.md). If this is not the first service deployed, the Google Cloud project is
-already created and the Terraform provisioning was already done, which means, it does not need to be created again.
+**OBS:** It is required to have the GKE clusters created in a Google Cloud project previouly. Then, different contexts on the local environment.
 
-**OBS:** After provisiong resources with Terraform, make sure to be in the correct folder. In thiss case, the root folder for cirene service:
-
-```
-/app-dev-demos/microservices/cirene-svc
-```
-
-Then, create the following env vars:
+This can be achieved by:
 
 ```
 GCP_PROJECT_ID=$(gcloud config get-value project)
-GCP_REGION=$(gcloud config get-value compute/region)
 GCP_ZONE=$(gcloud config get-value compute/zone)
-```
 
-Now, connect to the GKE cluster and generate the kube context:
+echo -e "PROJECT is ${GCP_PROJECT_ID}"
+echo -e "ZONE is ${GCP_ZONE}"
 
-```
-gcloud container clusters get-credentials gke-1-mc-cluster --zone $GCP_ZONE --project $GCP_PROJECT_ID
-```
+gcloud container clusters get-credentials <GKE_PROD_CLUSTER_NAME> --zone $GCP_ZONE --project $GCP_PROJECT_ID
+kubectx production=$(kubectx -c)
 
-Then, rename the kubectl context to `staging` using `kubectx`:
-
-```
+gcloud container clusters get-credentials <GKE_STAGING_CLUSTER_NAME> --zone $GCP_ZONE --project $GCP_PROJECT_ID
 kubectx staging=$(kubectx -c)
-```
 
-> `staging`is the name set in `skaffold.yaml` to find the GKE cluster configuration
+where:
 
-Check with `kubectx`if `staging` is the active kube context:
-
-```
-kubectx
-```
+* <GKE_PROD_CLUSTER_NAME>: Name of the production GKE cluster
+* <GKE_STAGING_CLUSTER_NAME>: Name of the staging GKE cluster
 
 If `staging` is not the current active context, change it by running:
 
@@ -227,22 +205,15 @@ Then, check if `kubectl` is properly using the GKE cluster:
 kubectl get nodes
 ```
 
-The output should be similar to:
+The output should show the nodes on the GKE cluster
+
+Finally, start the `inner development loop` with Skaffold
 
 ```
-NAME                                            STATUS   ROLES    AGE   VERSION
-gke-gke-mc-cluster-e2-node-pool-01ee4352-nfsk   Ready    <none>   17m   v1.24.9-gke.2000
-gke-gke-mc-cluster-e2-node-pool-1cd89454-05wv   Ready    <none>   17m   v1.24.9-gke.2000
-gke-gke-mc-cluster-e2-node-pool-891ecc22-mq2r   Ready    <none>   17m   v1.24.9-gke.2000
+skaffold dev
 ```
 
-Finally, start the `inner development loop` with Skaffold providing the `Artifact Registry` repository:
-
-```
-skaffold dev --default-repo $GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/cirene-svc
-```
-
-With that, Skaffold with build the Docker image, then push into the Artifact Registry. Then, apply the K8S resources into the GKE cluster.
+With that, Skaffold with build the Docker image, then push into the Artifact Registry using Cloud Build. Then, apply the K8S resources into the GKE cluster.
 
 > This will start skaffold in development mode, therefore its possible to use its features such as hot deploy, remote debugging and others. The 
 trick is that now this is done directly into a GKE cluster.
@@ -250,10 +221,10 @@ trick is that now this is done directly into a GKE cluster.
 To make sure everything was properly deployed on GKE, run:
 
 ```
-kubectl get all -n mc-app
+kubectl get all -n demo-app-staging
 ```
 
-> where `-n mc-app` is the namespace where the application is deployed.
+> where `-n mc-staging` is the namespace where the application is deployed.
 
 As output of the command above, it shoud be returned 1 pod running, 1 service of type Load Balancer, 1 deployment and 1 replica set.
 
@@ -262,7 +233,7 @@ Observe in the output of the command for the `service/cirene-svc` object that a 
 To make calls to the service, first get the LB external IP in a env var:
 
 ```
-CIRENE_SVC_EXT_IP=$(kubectl -n mc-app get svc cirene-svc --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+CIRENE_SVC_EXT_IP=$(kubectl -n demo-app-staging get svc cirene-svc --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
 Validate the env var has the external IP value:
@@ -289,17 +260,21 @@ Cleaning up...
  - service "cirene-svc" deleted
 ```
 
-Then, run `kubectl get all -n mc-app` to make sure there are no resources found in the `mc-app` namespace.
+Then, run `kubectl get all -n demo-app-staging` to make sure there are no resources found in the `demo-app-staging` namespace.
 
 Alternatively, in case of any issues with the current terminal session, causing Skaffold to lost its state, its possible to delete all K8S resources using:
 
 ```
-kubectl delete all --all -n mc-app
+kubectl delete all --all -n demo-app-staging
 ```
+
+**OBS:** Follow the same procedures above to deploy in `production`, just make sure to change the `staging` value to `production` in the commands. Also,
+instead of creating a LoadBalancer, it deploys the service using ClusterIP. In this case the app can be acessed using `localhost`, since there is a 
+port-forward setup.
 
 ### APIs Testing
 
-There are 2 endpoint APIs for this service:
+There are 3 possible endpoint APIs for this service (Depending on the type of build executed):
 
 #### Planet Size
 
@@ -326,13 +301,46 @@ Content-Type: text/plain;charset=UTF-8
 3739.28
 ```
 
+#### Planet Size Info
+
+Parameters:
+
+* RADIUS: a float value representing the radius of a planet
+
+```
+curl http://localhost:4000/cirene/planet/size/info?radius=<RADIUS>
+```
+
+Response:
+
+* PLANET SIZE: a float value representing a planet size.
+
+For example:
+
+```
+curl http://localhost:4000/cirene/planet/size/info?radius=35.7 | jq
+```
+
+> To use `jq`, first intall the utility on the OS.
+
+Response:
+
+```
+{
+  "size": 4003.93,
+  "rating": "MEDIUM",
+  "info": {
+    "hostname": "cirene-svc-v4-96c4f7765-sm9lm",
+    "hostaddress": "10.10.2.4"
+  }
+}
+```
+
 #### Health Check
 
 ```
 curl http://localhost:4000/cirene/health | jq
 ```
-
-> To use `jq`, first intall the utility on the OS.
 
 Response:
 

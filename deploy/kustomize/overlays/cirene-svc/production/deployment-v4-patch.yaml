@@ -1,6 +1,6 @@
 - op: replace 
   path: /spec/template/spec/containers/0/image 
-  value: us-central1-docker.pkg.dev/devops-dev-event/cirene-svc/cirene-svc-v4
+  value: us-central1-docker.pkg.dev/devops-demo-prj/cirene-svc/cirene-svc-v4
 
 - op: add 
   path: /spec/template/spec/containers/0/resources
