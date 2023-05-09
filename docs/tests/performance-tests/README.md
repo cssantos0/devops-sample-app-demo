@@ -17,7 +17,7 @@ The setup is composed by 2 parts:
 
 ### Deploy the application
 
-1. In a terminal, go to `/microservices` folder
+1. In a terminal, go to `/cirene-svc` folder
 
 2. Change the kube context to staging:
 
