@@ -15,7 +15,13 @@ This service is built in Java, therefore the following technologies are needed t
 
 There are different options to run this project. Choose one below.
 
-**OBS:** The project is set to run on port `4000`. If needed, change in `application.properties` file.
+**OBS 1:** Make sure to be in the correct folder. In this case, the root folder for cirene service:
+
+```
+/cirene-svc
+```
+
+**OBS 2:** The project is set to run on port `4000`. If needed, change in `application.properties` file.
 
 ### Using Maven + Spring Boot
 
