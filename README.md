@@ -1,6 +1,11 @@
 # DevOps Demo - Sample App
 
-This is a backend service representing a given planet size called cirene.
+This is a backend service representing a given planet size called cirene. Including:
+
+* Sample microservice
+* Automation with Skaffold
+* Tests (Unit, Functional, Performance)
+* Static code analysis (SonarQube)
 
 ## Tech stack
 
@@ -8,8 +13,15 @@ This service is built in Java, therefore the following technologies are needed t
 
 * [Java 11](https://openjdk.org/install/)
 * [Maven 3](https://maven.apache.org/install.html)
-
-> Also make sure all tech stack mentioned in the [main documentation](../../../README.md#tech-stack) is properly set.
+* [Docker](https://docs.docker.com/get-docker/)
+* [Skaffold](https://skaffold.dev/docs/install/)
+* [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+* [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+* [Kubectx](https://github.com/ahmetb/kubectx)
+* [Kustomize](https://kustomize.io/)
+* [SonarCube](https://www.sonarsource.com/products/sonarqube/)
+* [Rest Assured](https://rest-assured.io/)
+* [Locust](https://locust.io/)
 
 ## Development environment
 
@@ -353,6 +365,11 @@ Content-Type: application/json
   "status": "up"
 }
 ```
+
+## Tests
+
+* [Functional Tests](docs/tests/functional-tests/README.md)
+* [Performance Tests](docs/tests/performance-tests/README.md)
 
 ## Observability
 

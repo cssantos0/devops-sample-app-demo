@@ -1,0 +1,27 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: locust-worker
+  namespace: locust
+  labels:
+    name: locust-worker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: locust-worker
+  template:
+    metadata:
+      labels:
+        app: locust-worker
+    spec:
+      containers:
+        - name: locust-worker
+          image: @GCP_REGION@-docker.pkg.dev/@GCP_PROJECT_ID@/@LOCUST_REPO@/@LOCUST_IMAGE_NAME@:@LOCUST_IMAGE_TAG@
+          env:
+            - name: LOCUST_MODE
+              value: worker
+            - name: LOCUST_MASTER
+              value: locust-master
+            - name: TARGET_HOST
+              value: http://@APP_TARGET@
