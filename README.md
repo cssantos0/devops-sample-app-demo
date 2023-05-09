@@ -1,4 +1,4 @@
-# Devops Demo - Sample App
+# DevOps Demo - Sample App
 
 This is a backend service representing a given planet size called cirene.
 
