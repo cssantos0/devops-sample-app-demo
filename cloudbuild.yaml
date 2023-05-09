@@ -1,8 +1,10 @@
 steps:
-- name: maven:3.3-jdk-8
-  entrypoint: mvn
+- name: 'gcr.io/cloud-builders/mvn'
   args: ['test']
+  dir: 'cirene-svc'
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', 'cirene-svc' ]
+  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '--build-arg', 'ENABLE_RATING=true', '--build-arg', 'ENABLE_INFO=true', '.']
+  #args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '.' ]
+  dir: 'cirene-svc'
 images:
 - '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
