@@ -1,5 +1,5 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID//cirene-svc/cirene-svc-v4:$COMMIT_SHA', 'cirene-svc' ]
+  args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', 'cirene-svc' ]
 images:
-- '$LOCATION-docker.pkg.dev/$PROJECT_ID//cirene-svc/cirene-svc-v4:$COMMIT_SHA'
+- '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
