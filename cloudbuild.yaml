@@ -15,7 +15,7 @@ images:
 
 artifacts:
   objects:
-    location: 'gs://devops-demo-prj-tfstate/$PROJECT_ID/surefire-reports'
+    location: 'gs://devops-demo-prj-cloudbuild-artifacts/$PROJECT_ID/$BUILD_ID/surefire-reports'
     paths:
       - 'cirene-svc/target/surefire-reports/*'
  

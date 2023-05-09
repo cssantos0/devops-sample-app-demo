@@ -9,7 +9,7 @@ public class CireneServiceImplTests {
    public void whenRadiusIsProvided_thenCalculatePlanetSizeSuccessfully() {
     CireneService cireneService = new CireneServiceImpl();
     float result = cireneService.calculatePlanetSize(35f);
-    assertEquals(result, 3842.45f, 0.0f);
+    assertEquals(result, 3848.45f, 0.0f);
    }
 
    @Test
