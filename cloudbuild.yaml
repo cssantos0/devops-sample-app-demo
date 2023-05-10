@@ -51,6 +51,11 @@ steps:
     - -c
     - |      
       echo "HOST: " $(cat /workspace/cirenehost.txt)  
+
+      apt-get update 
+      apt install docker.io -y
+      docker --version
+
       docker build -t $LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests --build-arg CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt)
       docker run $LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests
   waitFor: ['func-tests-get-svc-ip']
