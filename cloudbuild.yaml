@@ -32,6 +32,7 @@ steps:
 
 - name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
+  dir: 'tests/functional-tests'
   args:
   - -xe
   - -c
