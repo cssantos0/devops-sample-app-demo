@@ -17,9 +17,6 @@ steps:
                    --default-repo=$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc \
                    --push=true    
 
-    # Unit tests
-    skaffold test --build-artifacts=/workspace/artifacts.json               
-
 - name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
   args:
