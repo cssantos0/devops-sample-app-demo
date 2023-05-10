@@ -14,12 +14,11 @@ steps:
   - |
     # Build and push images
     skaffold build --file-output=/workspace/artifacts.json \
-                   --default-repo=$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4 \
+                   --default-repo=$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc \
                    --push=true    
 
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '--build-arg', 'ENABLE_RATING=true', '--build-arg', 'ENABLE_INFO=true', '.']
-#  dir: 'cirene-svc'
+    # Unit tests
+    skaffold test --build-artifacts=/workspace/artifacts.json               
 
 - name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
@@ -33,9 +32,6 @@ steps:
                         --description "$(git log -1  --pretty='%s')" \
                         --build-artifacts /workspace/artifacts.json \
                         --annotations "commit_ui=https://github.com/cssantos0/devops-sample-app-demo/commit/$COMMIT_SHA"                          
-
-#images:
-#- '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
 
 artifacts:
   objects:

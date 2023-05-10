@@ -13,22 +13,49 @@ build:
         ENABLE_RATING: 'true'
 test:
   - image: cirene-svc-v4
+    context: cirene-svc
     custom:
       - command: mvn clean test
         timeoutSeconds: 60
+  #- image: cirene-svc-v4
+  #  custom:
+  #    - command: ./execute-code-analysis.sh
+  #      timeoutSeconds: 60
+  #      dependencies:
+  #        paths:
+  #        -  "execute-code-analysis.sh"         
 deploy:
   kustomize:
     paths: 
     - deploy/kustomize/overlays/cirene-svc/development
+portForward:
+- resourceType: service
+  resourceName: cirene-svc
+  namespace: demo-app
+  port: 4000    
   
 profiles: 
   - name: staging-profile
+    activation:
+      - kubeContext: staging
     deploy:
       kustomize:
         paths: 
         - deploy/kustomize/overlays/cirene-svc/staging
+    portForward:
+    - resourceType: service
+      resourceName: cirene-svc
+      namespace: demo-app-staging
+      port: 4000   
   - name: production-profile
+    activation:
+      - kubeContext: production
     deploy:
       kustomize:
         paths: 
         - deploy/kustomize/overlays/cirene-svc/production
+    portForward:
+    - resourceType: service
+      resourceName: cirene-svc
+      namespace: demo-app-prod
+      port: 4000        
