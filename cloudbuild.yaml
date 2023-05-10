@@ -36,8 +36,20 @@ steps:
   - -xe
   - -c
   - |
+    gcloud components install kubectl
     gcloud container clusters get-credentials gke-staging-cluster --zone ${_GCP_ZONE} --project $PROJECT_ID
-    kubectl get svc -n demo-app-staging
+    CIRENE_EXT_IP=$(kubectl -n demo-app-staging get svc cirene-svc --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    CIRENE_HOST="${CIRENE_EXT_IP}:4000"
+    echo "${CIRENE_HOST}" > /workspace/cirenehost.txt
+
+- name: ubuntu
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      # Read from "/workspace"
+      CIRENE_HOST=$(cat /workspace/cirenehost.txt)    
+      echo $CIRENE_HOST
 
 #artifacts:
 #  objects:
