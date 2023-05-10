@@ -5,8 +5,9 @@ metadata:
 build:
   artifacts:
   - image: cirene-svc-v4
+    context: cirene-svc
     docker:
-      dockerfile: cirene-svc/Dockerfile
+      dockerfile: Dockerfile
       buildArgs:
         ENABLE_INFO: 'true'
         ENABLE_RATING: 'true'
