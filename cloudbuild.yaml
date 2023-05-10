@@ -30,7 +30,8 @@ steps:
 #                        --build-artifacts /workspace/artifacts.json \
 #                        --annotations "commit_ui=https://github.com/cssantos0/devops-sample-app-demo/commit/$COMMIT_SHA" 
 
-- name: 'google/cloud-sdk:latest'
+- id: 'func-tests-get-svc-ip'
+  name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
   dir: 'tests/functional-tests'
   args:
@@ -42,25 +43,34 @@ steps:
     gcloud container clusters get-credentials gke-staging-cluster --zone ${_GCP_ZONE} --project $PROJECT_ID
     kubectl -n demo-app-staging get svc cirene-svc --output jsonpath='{.status.loadBalancer.ingress[0].ip}' > /workspace/cirenehost.txt
 
-- name: 'gcr.io/cloud-builders/docker'
+- id: 'func-tests-show-ip'
+  name: ubuntu
+  entrypoint: bash
+  dir: 'tests/functional-tests'
+  args:
+    - -c
+    - |
+      # Read from "/workspace"      
+      echo "HOST: " $(cat /workspace/cirenehost.txt)  
+  waitFor: ['func-tests-get-svc-ip']
+
+- id: 'func-tests-build'
+  name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt)', '.']
   dir: 'tests/functional-tests'
+  waitFor: ['func-tests-get-svc-ip']
 
-- name: 'gcr.io/cloud-builders/docker'
+- id: 'func-tests-push'
+  name: 'gcr.io/cloud-builders/docker'
   args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
   dir: 'tests/functional-tests'
+  waitFor: ['func-tests-build']
 
-- name: 'gcr.io/cloud-builders/docker'
+- id: 'func-tests-run'
+  name: 'gcr.io/cloud-builders/docker'
   args: ['run', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
   dir: 'tests/functional-tests'
-
-#- name: ubuntu
-#  entrypoint: bash
-#  args:
-#    - -c
-#    - |
-#      # Read from "/workspace"      
-#      echo "HOST: " $(cat /workspace/cirenehost.txt)  
+  waitFor: ['func-tests-push']
 
 #artifacts:
 #  objects:
