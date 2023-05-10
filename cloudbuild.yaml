@@ -17,7 +17,7 @@ steps:
   - -xe
   - -c
   - |
-    gcloud config set deploy/region ${_REGION}
+    gcloud config set deploy/region $LOCATION
     gcloud deploy releases create rel-${SHORT_SHA} \
                         --delivery-pipeline devops-demo-cd-pipeline \
                         --description "$(git log -1  --pretty='%s')" \
