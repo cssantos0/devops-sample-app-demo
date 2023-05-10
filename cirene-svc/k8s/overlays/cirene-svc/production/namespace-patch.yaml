@@ -1,7 +1,0 @@
-- op: replace 
-  path: /metadata/name
-  value: demo-app-prod
-
-- op: replace 
-  path: /metadata/labels/name
-  value: demo-app-prod

@@ -1,0 +1,33 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: cirene-svc
+build:
+  artifacts:
+  - image: cirene-svc-v4
+    docker:
+      dockerfile: cirene-svc/Dockerfile
+      buildArgs:
+        ENABLE_INFO: 'true'
+        ENABLE_RATING: 'true'
+test:
+  - image: cirene-svc-v4
+    custom:
+      - command: mvn clean test
+        timeoutSeconds: 60
+deploy:
+  kustomize:
+    paths: 
+    - deploy/kustomize/overlays/cirene-svc/development
+  
+profiles: 
+  - name: staging-profile
+    deploy:
+      kustomize:
+        paths: 
+        - deploy/kustomize/overlays/cirene-svc/staging
+  - name: production-profile
+    deploy:
+      kustomize:
+        paths: 
+        - deploy/kustomize/overlays/cirene-svc/production
