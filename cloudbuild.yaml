@@ -41,13 +41,22 @@ steps:
     gcloud container clusters get-credentials gke-staging-cluster --zone ${_GCP_ZONE} --project $PROJECT_ID
     kubectl -n demo-app-staging get svc cirene-svc --output jsonpath='{.status.loadBalancer.ingress[0].ip}' > /workspace/cirenehost.txt
 
-- name: ubuntu
-  entrypoint: bash
-  args:
-    - -c
-    - |
-      # Read from "/workspace"      
-      echo "HOST: " $(cat /workspace/cirenehost.txt)  
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt)', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['run', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
+
+#- name: ubuntu
+#  entrypoint: bash
+#  args:
+#    - -c
+#    - |
+#      # Read from "/workspace"      
+#      echo "HOST: " $(cat /workspace/cirenehost.txt)  
 
 #artifacts:
 #  objects:

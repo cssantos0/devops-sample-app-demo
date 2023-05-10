@@ -10,7 +10,9 @@ import org.junit.Test;
 
 public class CireneFunctionalTest {
 
-  private static final String CIRENE_URL = "http://localhost:4000/cirene";
+  private static final String CIRENE_URL_HOST = System.getProperty("CIRENE_URL_HOST");
+
+  private static final String CIRENE_URL = "http://" + CIRENE_URL_HOST + ":4000/cirene";  
 
   private static final String APPLICATION_JSON = "application/json";
 
