@@ -3,6 +3,8 @@ kind: Config
 metadata:
   name: cirene-svc
 build:
+  tagPolicy:
+    sha256: {}    
   artifacts:
   - image: cirene-svc-v4
     context: cirene-svc
