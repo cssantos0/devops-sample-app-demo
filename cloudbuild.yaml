@@ -56,27 +56,30 @@ steps:
       apt install docker.io -y
       docker --version
 
-      docker build -t $LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests --build-arg CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt)
-      docker run $LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests
+      #docker build -t $LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests --build-arg CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt) .
+      #docker run $LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests
+
+      docker build -t functional-tests --build-arg CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt) .
+      docker run functional-tests
   waitFor: ['func-tests-get-svc-ip']
 
-- id: 'func-tests-build'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST="$(cat /workspace/cirenehost.txt)"', '.']
-  dir: 'tests/functional-tests'
-  waitFor: ['func-tests-get-svc-ip']
+#- id: 'func-tests-build'
+#  name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST="$(cat /workspace/cirenehost.txt)"', '.']
+#  dir: 'tests/functional-tests'
+#  waitFor: ['func-tests-get-svc-ip']
 
-- id: 'func-tests-push'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
-  dir: 'tests/functional-tests'
-  waitFor: ['func-tests-build']
+#- id: 'func-tests-push'
+#  name: 'gcr.io/cloud-builders/docker'
+#  args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
+#  dir: 'tests/functional-tests'
+#  waitFor: ['func-tests-build']
 
-- id: 'func-tests-run'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['run', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
-  dir: 'tests/functional-tests'
-  waitFor: ['func-tests-push']
+#- id: 'func-tests-run'
+#  name: 'gcr.io/cloud-builders/docker'
+#  args: ['run', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
+#  dir: 'tests/functional-tests'
+#  waitFor: ['func-tests-push']
 
 #artifacts:
 #  objects:
