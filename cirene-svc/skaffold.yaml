@@ -54,7 +54,8 @@ profiles:
     deploy:
       kustomize:
         paths: 
-        - ../deploy/kustomize/overlays/cirene-svc/production
+        #- ../deploy/kustomize/overlays/cirene-svc/production
+        - k8s/overlays/cirene-svc/production
     portForward:
     - resourceType: service
       resourceName: cirene-svc
@@ -77,7 +78,8 @@ profiles:
     deploy:
       kustomize:
         paths: 
-        - ../deploy/kustomize/overlays/cirene-svc/staging
+        #- ../deploy/kustomize/overlays/cirene-svc/staging
+        - k8s/overlays/cirene-svc/staging
     portForward:
     - resourceType: service
       resourceName: cirene-svc

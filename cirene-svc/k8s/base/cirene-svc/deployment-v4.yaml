@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cirene-svc-v4
+  labels:
+    app: cirene-svc
+    version: v4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cirene-svc
+      version: v4
+  template:
+    metadata:
+      labels:        
+        app: cirene-svc
+        version: v4
+    spec:
+      serviceAccountName: cirene-svc-sa
+      containers:
+      - name: cirene-svc
+        image: cirene-svc
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: appport
+          containerPort: 4000
+          protocol: TCP    

@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: demo-app-prod
+commonLabels:
+  env: prod
+resources:
+  - ../../../base
+  - ../../../base/cirene-svc
+patches:
+  - target:      
+      kind: Namespace
+      name: demo-app
+    path: namespace-patch.yaml
+  - target:      
+      kind: Deployment
+      name: cirene-svc-v4
+    path: deployment-v4-patch.yaml      
