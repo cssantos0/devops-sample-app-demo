@@ -43,12 +43,15 @@ steps:
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST=$(cat /workspace/cirenehost.txt)', '.']
+  dir: 'tests/functional-tests'
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
+  dir: 'tests/functional-tests'
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['run', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests']
+  dir: 'tests/functional-tests'
 
 #- name: ubuntu
 #  entrypoint: bash
