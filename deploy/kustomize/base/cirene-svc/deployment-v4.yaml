@@ -21,7 +21,7 @@ spec:
       containers:
       - name: cirene-svc
         image: cirene-svc
-        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: IfNotPresent
         ports:
         - name: appport
           containerPort: 4000

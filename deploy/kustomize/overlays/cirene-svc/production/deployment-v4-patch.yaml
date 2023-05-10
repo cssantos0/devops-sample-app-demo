@@ -1,10 +1,10 @@
-- op: replace 
-  path: /spec/template/spec/containers/0/image 
-  value: us-central1-docker.pkg.dev/devops-demo-prj/cirene-svc/cirene-svc-v4
+#- op: replace 
+#  path: /spec/template/spec/containers/0/image 
+#  value: us-central1-docker.pkg.dev/devops-demo-prj/cirene-svc/cirene-svc-v4
 
-- op: replace 
-  path: /spec/template/spec/containers/0/imagePullPolicy 
-  value: Always
+#- op: replace 
+#  path: /spec/template/spec/containers/0/imagePullPolicy 
+#  value: Always
 
 - op: add 
   path: /spec/template/spec/containers/0/resources
