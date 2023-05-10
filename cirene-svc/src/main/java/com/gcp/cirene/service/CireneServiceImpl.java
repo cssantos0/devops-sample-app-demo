@@ -35,7 +35,7 @@ public class CireneServiceImpl implements CireneService {
 
                 if (ENABLE_RATING) {
                     builder.append(",");
-                    builder.append("\"ratingxuxasasha\": ");
+                    builder.append("\"rating\": ");
                     builder.append("\"");
                     builder.append(rating);
                     builder.append("\"");
