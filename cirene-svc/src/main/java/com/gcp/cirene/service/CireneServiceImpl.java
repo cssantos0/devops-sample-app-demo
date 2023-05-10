@@ -30,7 +30,7 @@ public class CireneServiceImpl implements CireneService {
             final StringBuilder builder = new StringBuilder();
             builder.append("{");
 
-                builder.append("\"sizexptooo\": ");
+                builder.append("\"sizexptooouol\": ");
                 builder.append(planetArea);
 
                 if (ENABLE_RATING) {
