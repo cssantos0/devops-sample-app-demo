@@ -10,12 +10,31 @@ steps:
   args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '--build-arg', 'ENABLE_RATING=true', '--build-arg', 'ENABLE_INFO=true', '.']
   dir: 'cirene-svc'
 
+- name: 'google/cloud-sdk:latest'
+  dir: 'cirene-svc'
+  entrypoint: 'sh'
+  args:
+  - -xe
+  - -c
+  - |
+    gcloud config set deploy/region ${_REGION}
+    gcloud deploy releases create rel-${SHORT_SHA} \
+                        --delivery-pipeline devops-demo-cd-pipeline \
+                        --description "$(git log -1  --pretty='%s')" \
+                        --images image1=$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA \
+                        --annotations "commit_ui=https://github.com/cssantos0/devops-sample-app-demo/commit/$COMMIT_SHA"                          
+
 images:
 - '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
 
 artifacts:
   objects:
-    location: 'gs://devops-demo-prj-cloudbuild-artifacts/$PROJECT_ID/$BUILD_ID/surefire-reports'
+    location: 'gs://devops-demo-prj-cloudbuild-artifacts/$PROJECT_ID/$BUILD_ID'
     paths:
-      - 'cirene-svc/target/surefire-reports/*'
- 
+      - '/workspace/cirene-svc/target/surefire-reports/*'
+      #- '/workspace/cirene-svc/artifacts.json'
+
+options:
+  machineType: E2_HIGHCPU_8
+
+timeout: 3600s
