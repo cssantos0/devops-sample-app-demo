@@ -56,7 +56,7 @@ steps:
 
 - id: 'func-tests-build'
   name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST=`cat /workspace/cirenehost.txt`', '.']
+  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/functional-tests/functional-tests', '--build-arg', 'CIRENE_URL_HOST="$(cat /workspace/cirenehost.txt)"', '.']
   dir: 'tests/functional-tests'
   waitFor: ['func-tests-get-svc-ip']
 
