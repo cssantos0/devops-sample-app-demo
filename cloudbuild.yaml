@@ -6,9 +6,20 @@ steps:
   dir: 'cirene-svc'
   allowExitCodes: [1]
 
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '--build-arg', 'ENABLE_RATING=true', '--build-arg', 'ENABLE_INFO=true', '.']
-  dir: 'cirene-svc'
+- name: 'gcr.io/k8s-skaffold/skaffold'
+  entrypoint: 'sh'
+  args:
+  - -xe
+  - -c
+  - |
+    # Build and push images
+    skaffold build --file-output=/workspace/artifacts.json \
+                   --default-repo=$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4 \
+                   --push=true    
+
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA', '--build-arg', 'ENABLE_RATING=true', '--build-arg', 'ENABLE_INFO=true', '.']
+#  dir: 'cirene-svc'
 
 - name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
@@ -20,18 +31,18 @@ steps:
     gcloud deploy releases create rel-${SHORT_SHA} \
                         --delivery-pipeline devops-demo-cd-pipeline \
                         --description "$(git log -1  --pretty='%s')" \
-                        --images image1=$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA \
+                        --build-artifacts /workspace/artifacts.json \
                         --annotations "commit_ui=https://github.com/cssantos0/devops-sample-app-demo/commit/$COMMIT_SHA"                          
 
-images:
-- '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
+#images:
+#- '$LOCATION-docker.pkg.dev/$PROJECT_ID/cirene-svc/cirene-svc-v4:$COMMIT_SHA'
 
 artifacts:
   objects:
     location: 'gs://devops-demo-prj-cloudbuild-artifacts/$PROJECT_ID/$BUILD_ID'
     paths:
       - '/workspace/cirene-svc/target/surefire-reports/*'
-      #- '/workspace/cirene-svc/artifacts.json'
+      - '/workspace/artifacts.json'
 
 options:
   machineType: E2_HIGHCPU_8
