@@ -8,7 +8,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 
 import org.junit.Test;
 
-public class CireneFunctionalTest {
+public class CireneFunctionalTest { 
 
   private static final String CIRENE_URL_HOST = System.getProperty("CIRENE_URL_HOST");
 
