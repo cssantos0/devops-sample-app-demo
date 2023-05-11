@@ -17,15 +17,11 @@ test:
   - image: cirene-svc-v4
     context: cirene-svc
     custom:
-      - command: mvn clean test
-        timeoutSeconds: 60
-  #- image: cirene-svc-v4
-  #  custom:
-  #    - command: ./execute-code-analysis.sh
-  #      timeoutSeconds: 60
-  #      dependencies:
-  #        paths:
-  #        -  "execute-code-analysis.sh"         
+      - command: ./execute-code-analysis.sh
+        timeoutSeconds: 120
+        dependencies:
+          paths:
+          -  "execute-code-analysis.sh"         
 deploy:
   kustomize:
     paths: 
