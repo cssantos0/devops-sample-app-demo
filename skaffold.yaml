@@ -14,7 +14,7 @@ build:
         ENABLE_INFO: 'true'
         ENABLE_RATING: 'true'
 test:
-  - image: cirene-svc-v4
+  - image: cirene-svc-v4 
     context: cirene-svc
     custom:
       - command: ./execute-code-analysis.sh
