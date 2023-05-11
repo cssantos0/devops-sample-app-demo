@@ -2,8 +2,11 @@ steps:
 
 - id: 'execute-static-analysis' 
   name: maven:3-eclipse-temurin-17-alpine
-  entrypoint: mvn
-  args: ['verify', 'sonar:sonar', '-Pcoverage', '-Dsonar.login=$$TOKEN', '-Dsonar.host.url=$$URL', '-Dsonar.organization=$$ORG', '-Dsonar.projectKey=$$PROJECT']
+  entrypoint: /bin/bash
+  args: 
+     - '-c'
+     - |
+        mvn verify sonar:sonar -Pcoverage  -Dsonar.login=$$TOKEN -Dsonar.host.url=$$URL -Dsonar.organization=$$ORG -Dsonar.projectKey=$$PROJECT
   dir: 'cirene-svc'  
   secretEnv: ['TOKEN', 'PROJECT', 'ORG', 'URL']
 
