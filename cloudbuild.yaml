@@ -14,7 +14,11 @@ steps:
   args: 
      - '-c'
      - |
-        mvn verify sonar:sonar -Pcoverage  -Dsonar.login=$$TOKEN -Dsonar.host.url=$$URL -Dsonar.organization=$$ORG -Dsonar.projectKey=$$PROJECT
+        mvn verify sonar:sonar -Pcoverage \
+        -Dsonar.login=$$SONAR_TOKEN_SECRET \
+        -Dsonar.host.url=$$SONAR_URL_SECRET \
+        -Dsonar.organization=$$SONAR_ORG_SECRET \
+        -Dsonar.projectKey=$$SONAR_PROJECT_SECRET
   dir: 'cirene-svc'  
   secretEnv: ['SONAR_TOKEN_SECRET', 'SONAR_PROJECT_SECRET', 'SONAR_ORG_SECRET', 'SONAR_URL_SECRET'] 
   waitFor: ['execute-unit-tests']
