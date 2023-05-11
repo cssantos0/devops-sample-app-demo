@@ -1,17 +1,10 @@
 steps:
 
-- name: 'gcr.io/$PROJECT_ID/sonar-scanner:latest'
-  id: Sonar Scanner
-  entrypoint: /bin/bash
-  args:
-    - '-c'
-    - |
-      sonar-scanner \
-        -Dsonar.host.url=$$URL \
-        -Dsonar.login=$$TOKEN \
-        -Dsonar.projectKey=$$PROJECT \
-        -Dsonar.organization=$$ORG \
-        -Dsonar.sources=cirene-svc/
+- id: 'execute-static-analysis' 
+  name: maven:3-eclipse-temurin-17-alpine
+  entrypoint: mvn
+  args: ['mvn', 'verify', 'sonar:sonar', '-Pcoverage', '-Dsonar.login=$$TOKEN', '-Dsonar.host.url=$$URL', '-Dsonar.organization=$$ORG', '-Dsonar.projectKey=$$PROJECT']
+  dir: 'cirene-svc'  
   secretEnv: ['TOKEN', 'PROJECT', 'ORG', 'URL']
 
 availableSecrets:
