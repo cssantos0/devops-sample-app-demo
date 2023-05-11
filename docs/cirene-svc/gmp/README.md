@@ -3,7 +3,7 @@
 * [Documentation](https://cloud.google.com/stackdriver/docs/managed-prometheus)
 * [Pricing](https://cloud.google.com/managed-prometheus#section-10)
 
-## Setup
+## Setup 
 
 Follow the instructions below.
 
