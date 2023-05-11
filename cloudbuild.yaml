@@ -16,7 +16,7 @@ steps:
      - |
         mvn verify sonar:sonar -Pcoverage  -Dsonar.login=$$TOKEN -Dsonar.host.url=$$URL -Dsonar.organization=$$ORG -Dsonar.projectKey=$$PROJECT
   dir: 'cirene-svc'  
-  secretEnv: ['TOKEN', 'PROJECT', 'ORG', 'URL'] 
+  secretEnv: ['SONAR_TOKEN_SECRET', 'SONAR_PROJECT_SECRET', 'SONAR_ORG_SECRET', 'SONAR_URL_SECRET'] 
   waitFor: ['execute-unit-tests']
 
 - id: 'build-push-application' 
@@ -100,11 +100,11 @@ timeout: 3600s
 
 availableSecrets:
   secretManager:
-  - versionName: projects/$PROJECT_ID/secrets/SONAR_TOKEN/versions/1
-    env: TOKEN
-  - versionName: projects/$PROJECT_ID/secrets/SONAR_PROJECT/versions/1
-    env: PROJECT
-  - versionName: projects/$PROJECT_ID/secrets/SONAR_ORG/versions/1
-    env: ORG
-  - versionName: projects/$PROJECT_ID/secrets/SONAR_URL/versions/1
-    env: URL 
+  - versionName: projects/$PROJECT_ID/secrets/sonar-token-secret/versions/1
+    env: SONAR_TOKEN_SECRET
+  - versionName: projects/$PROJECT_ID/secrets/sonar-project-secret/versions/1
+    env: SONAR_PROJECT_SECRET
+  - versionName: projects/$PROJECT_ID/secrets/sonar-org-secret/versions/1
+    env: SONAR_ORG_SECRET
+  - versionName: projects/$PROJECT_ID/secrets/sonar-url-secret/versions/1
+    env: SONAR_URL_SECRET 
