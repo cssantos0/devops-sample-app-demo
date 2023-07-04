@@ -36,6 +36,18 @@ profiles:
   - name: staging-profile
     activation:
       - kubeContext: staging
+    build:
+      googleCloudBuild: {}
+      tagPolicy:
+        sha256: {}   
+      artifacts:
+      - image: us-central1-docker.pkg.dev/devops-demo-prj/cirene-svc/cirene-svc-v4
+        context: cirene-svc
+        docker:
+          dockerfile: Dockerfile   
+          buildArgs:
+            ENABLE_INFO: 'true'  
+            ENABLE_RATING: 'true'
     deploy:
       kustomize:
         paths: 
