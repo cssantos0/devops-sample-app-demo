@@ -12,6 +12,8 @@ This project has the functional tests for all microservices.
 
 1. In a terminal, go to `/tests/functional-tests` folder.
 
-2. Run `./execute-functional-tests.sh`.
+2. If running locally, set `export CIRENE_URL_HOST=localhost`  
 
-3. After finished, aalyse the results.
+3. Run `./execute-functional-tests.sh`.
+
+4. After finished, aalyse the results.
