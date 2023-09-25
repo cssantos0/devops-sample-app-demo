@@ -33,6 +33,32 @@ portForward:
   port: 4000    
   
 profiles: 
+
+  - name: sandbox-profile
+    activation:
+      - kubeContext: sandbox
+    build:
+      googleCloudBuild: {}
+      tagPolicy:
+        sha256: {}   
+      artifacts:
+      - image: us-central1-docker.pkg.dev/devops-demo-prj/cirene-svc/cirene-svc-v4
+        context: cirene-svc
+        docker:
+          dockerfile: Dockerfile   
+          buildArgs:
+            ENABLE_INFO: 'true'  
+            ENABLE_RATING: 'true'
+    deploy:
+      kustomize:
+        paths: 
+        - deploy/kustomize/overlays/cirene-svc/sandbox
+    portForward:
+    - resourceType: service
+      resourceName: cirene-svc
+      namespace: demo-app-sandbox
+      port: 4000
+
   - name: staging-profile
     activation:
       - kubeContext: staging
@@ -56,7 +82,8 @@ profiles:
     - resourceType: service
       resourceName: cirene-svc
       namespace: demo-app-staging
-      port: 4000   
+      port: 4000
+
   - name: production-profile
     activation:
       - kubeContext: production
@@ -68,4 +95,5 @@ profiles:
     - resourceType: service
       resourceName: cirene-svc
       namespace: demo-app-prod
-      port: 4000        
+      port: 4000   
+     

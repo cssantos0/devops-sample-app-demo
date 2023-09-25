@@ -1,0 +1,13 @@
+- op: replace 
+  path: /spec/template/spec/containers/0/image 
+  value: us-central1-docker.pkg.dev/devops-demo-prj/cirene-svc/cirene-svc-v4
+
+- op: add 
+  path: /spec/template/spec/containers/0/resources
+  value:
+    requests:
+      memory: "1024Mi"
+      cpu: "1500m"
+    limits:
+      memory: "2048Mi"
+      cpu: "2000m"
