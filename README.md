@@ -2,10 +2,11 @@
 
 This is a backend service representing a given planet size called cirene. Including:
 
-* Sample microservice
+* Sample microservice in Java
 * Automation with Skaffold
 * Tests (Unit, Functional, Performance)
 * Static code analysis (SonarQube)
+* Deployment in Kubernetes with Kustomize
 
 ## Tech stack
 
@@ -22,6 +23,22 @@ This service is built in Java, therefore the following technologies are needed t
 * [SonarCube](https://www.sonarsource.com/products/sonarqube/)
 * [Rest Assured](https://rest-assured.io/)
 * [Locust](https://locust.io/)
+
+## Setup
+
+Prior to running locally or in Cloud Build/Deploy, make sure to make small changes to adapt to your environment. Make the following changes:
+
+* Change the GCP project id in places where they are fixed (given the nature of declarative YAMLs). For that look it up for `devops-demo-prj`, which is the 
+default project already set in the files. (The files includes the cloudbuild.yaml, skaffold.ayml, kustomize deployments, locust deployment).
+
+* Change the GCP region in places where they are fixed (given the nature of declarative YAMLs). For that look it up for `us-central1`, which is the 
+default project already set in the files. (The files includes the skaffold.ayml, kustomize deployments, locust deployment).
+
+* To test the DevOps sexction, there is a project called [devops-infra-demo](https://github.com/cssantos0/devops-infra-demo) that provisions the DevOps infrastructure. 
+Check the documentation in there to provision it.
+
+* In case of deploying on Cloud Build with GitLab as repo, make sure to change the commit_ui annotation on the `deploy-create-release-cd` step on `cloudbuild.yaml`. 
+This is because it is fixed to reference the commit in GitHub and it need to be changed to reference the commit in GitLab.
 
 ## Development environment
 
@@ -237,7 +254,7 @@ To make sure everything was properly deployed on GKE, run:
 kubectl get all -n demo-app-staging
 ```
 
-> where `-n mc-staging` is the namespace where the application is deployed.
+> where `-n demo-app-staging` is the namespace where the application is deployed.
 
 As output of the command above, it shoud be returned 1 pod running, 1 service of type Load Balancer, 1 deployment and 1 replica set.
 
@@ -370,15 +387,3 @@ Content-Type: application/json
 
 * [Functional Tests](docs/tests/functional-tests/README.md)
 * [Performance Tests](docs/tests/performance-tests/README.md)
-
-## Observability
-
-* [Enable GMP](docs/cirene-svc/gmp/README.md)
-
-## References
-
-* [Spring Boot GCP - Samples](https://spring-gcp.saturnism.me/)
-* [Spring Boot GCP - Docs](https://docs.google.com/document/d/14NRxngEhkh1gPTyTS-V51XEHrGMhJKnbzw5uSs6oFaI/edit)
-* [Skaffold - YAML Reference](https://skaffold.dev/docs/references/yaml/)
-* [Skaffold - Code Lab](https://codelabs.developers.google.com/skaffold-deep-dive#0)
-* [Skaffold - Example Repositories](https://github.com/GoogleContainerTools/skaffold/tree/v1.39.3/examples)
